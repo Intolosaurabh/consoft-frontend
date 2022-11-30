@@ -177,7 +177,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
 
   const userData = useSelector(state => state.user);
 
-
   const current_dat = moment().format('YYYY%2FMM%2FDD');
 
   const inputkeyRef = useRef(inputs);
@@ -204,7 +203,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
       data
         .then(res => res.json())
         .then(resp => {
-
           setPostQtyData(resp);
           getReportData();
           if (resp.status == '200') {
@@ -247,10 +245,8 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
     }
   };
 
-
   async function getReportData() {
     if (Main_drp_pro_value || postQtyData || updateStatus || loading) {
-
       const data = await Get_report_data(
         Main_drp_pro_value,
         userData._id,
@@ -269,7 +265,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
     getReportData();
     getQualityType();
   }, [postQtyData, Main_drp_pro_value, updateStatus, loading]);
-
 
   const editReportBtn = async id => {
     setItemData(reportdata.data);
@@ -415,7 +410,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
       if (temp_id.data) {
         setPaintingItem(temp_id.data._id);
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -524,7 +518,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
     setInputs(_inputsunit);
   };
   const inputlangth = (text, key) => {
-
     const _inputlangth = [...inputs];
     // _inputlangth[key].num_length = filterOnlyNumericValue([text]);
     _inputlangth[key].num_length = text;
@@ -533,7 +526,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
     setInputs(_inputlangth);
   };
   const inputMm = (text, key) => {
-
     const _inputlangth = [...inputs];
     // _inputlangth[key].num_length = filterOnlyNumericValue([text]);
     _inputlangth[key].steel_mm = text;
@@ -882,18 +874,24 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
                   Subinputwidth(text, index1, key);
                 }}
               />
-              <TextInput
-                style={inputfromone}
-                placeholder="T"
-                placeholderTextColor={COLORS.lightGray1}
-                value={subquantityitems.sub_height}
-                keyboardType="numeric"
-                onChangeText={text => {
-                  setSubHeightkey(subquantityitems.key);
-                  // setSubThicknessData(text)
-                  Subinputhight(text, index1, key);
-                }}
-              />
+              {input.item_id === paintingItem ||
+              input.item_id === plasterItem ||
+              input.item_id === floringItem ? (
+                <View style={{flex: 1}}></View>
+              ) : (
+                <TextInput
+                  style={inputfromone}
+                  placeholder="T"
+                  placeholderTextColor={COLORS.lightGray1}
+                  value={subquantityitems.sub_height}
+                  keyboardType="numeric"
+                  onChangeText={text => {
+                    setSubHeightkey(subquantityitems.key);
+                    // setSubThicknessData(text)
+                    Subinputhight(text, index1, key);
+                  }}
+                />
+              )}
             </>
           )}
           {input.item_id === steelItem ? (
@@ -937,7 +935,21 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
               placeholderTextColor={COLORS.white}
               placeholder={'Total'}
               value={
-                ((index1 == subLengthKey) == subWidthKey) == subHeightKey
+                input.item_id === paintingItem ||
+                input.item_id === plasterItem ||
+                input.item_id === floringItem
+                  ? ((key == subLengthKey) == subWidthKey) == subNosKey
+                    ? (subquantityitems.sub_total = (
+                        subquantityitems.sub_length *
+                        subquantityitems.sub_width *
+                        subquantityitems.sub_nos
+                      ).toFixed(2)).toString()
+                    : (subquantityitems.sub_total = (
+                        subquantityitems.sub_length *
+                        subquantityitems.sub_width *
+                        subquantityitems.sub_nos
+                      ).toFixed(2)).toString()
+                  : ((index1 == subLengthKey) == subWidthKey) == subHeightKey
                   ? (subquantityitems.sub_total = (
                       subquantityitems.sub_length *
                       subquantityitems.sub_width *
@@ -1149,7 +1161,6 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
                           checkQuantityItemExist();
                         }}
                         onChange={item => {
-                   
                           setSelectKey(input.key);
                           getLatestSteelId();
                           getPaintingId();
@@ -1304,10 +1315,9 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
                             inputwidth(text, key);
                           }}
                         />
-                        {(
-                          (input.item_id === paintingItem) || (input.item_id === plasterItem) || (input.item_id === floringItem)                         
-                          
-                        ) ? (
+                        {input.item_id === paintingItem ||
+                        input.item_id === plasterItem ||
+                        input.item_id === floringItem ? (
                           <View style={{flex: 1}}></View>
                         ) : (
                           <TextInput
@@ -1332,7 +1342,21 @@ const Quantity = ({project_id, Main_drp_pro_value, loading}) => {
                           placeholderTextColor={COLORS.white}
                           placeholder={'Total'}
                           value={
-                            ((key == lengthKey) == widthKey) == heightKey
+                            input.item_id === paintingItem ||
+                            input.item_id === plasterItem ||
+                            input.item_id === floringItem
+                              ? ((key == lengthKey) == widthKey) == nosKey
+                                ? (input.num_total = (
+                                    input.num_length *
+                                    input.num_width *
+                                    input.nos
+                                  ).toFixed(2)).toString()
+                                : (input.num_total = (
+                                    input.num_length *
+                                    input.num_width *
+                                    input.nos
+                                  ).toFixed(2)).toString()
+                              : ((key == lengthKey) == widthKey) == heightKey
                               ? (input.num_total = (
                                   input.num_length *
                                   input.num_width *
