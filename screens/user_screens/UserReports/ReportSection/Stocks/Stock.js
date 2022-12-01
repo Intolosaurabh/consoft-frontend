@@ -130,7 +130,7 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
   const getStockDataItems = async () => {
     try {
       const data = await get_stock_item_name();
-      setStockItemData(data);
+      setStockItemData(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -142,20 +142,19 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
 
   const GetStockData = async () => {
     try {
-        const data = await get_stock_data(
-          userCompanyData.company_id,
-          MyDateString,
-        );
-        const res = await data.json();
-        if (res.status == 200) {
-          // res.data.map(ele => {
-          setGetStockData(res.data);
-          // });
-        }
-      } catch (error) {
-        console.log(error);
+      const data = await get_stock_data(
+        userCompanyData.company_id,
+        MyDateString,
+      );
+      const res = await data.json();
+      if (res.status == 200) {
+        // res.data.map(ele => {
+        setGetStockData(res.data);
+        // });
       }
-        
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useMemo(() => {
@@ -174,7 +173,6 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
         user_id: userCompanyData._id,
         stockEntry: stockEntry,
       };
-      // console.log("🚀 ~ file: Stock.js ~ line 93 ~ postStockDataItems ~ stock_post_data", stock_post_data)
 
       if (stock_post_data) {
         const data = await insert_stock_data(stock_post_data);
@@ -843,8 +841,8 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
               justifyContent: 'center',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{marginTop: 5,top:20}}>
-                { (
+              <View style={{marginTop: 5, top: 20}}>
+                {
                   <FlatList
                     data={getStockData}
                     horizontal
@@ -852,14 +850,14 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
                       flexDirection: 'column',
                       padding: 2,
                       marginHorizontal: 2,
-                      paddingBottom:20
+                      paddingBottom: 20,
                     }}
                     showsHorizontalScrollIndicator={false}
                     renderItem={renderStock}
                     ListHeaderComponent={ListHeader}
                     keyExtractor={item => item._id.toString()}
                   />
-                ) }
+                }
               </View>
             </ScrollView>
           </View>
@@ -895,16 +893,15 @@ const Stock = ({project_id, Main_drp_pro_value, loading}) => {
 
 export default Stock;
 
-
 const styles1 = StyleSheet.create({
-    headerFooterStyle: {
-      width: '100%',
-      borderWidth: 0.1,
-    },
-    textStyle: {
-      textAlign: 'center',
-      color: '#fff',
-      fontSize: 18,
-      padding: 7,
-    },
-  });
+  headerFooterStyle: {
+    width: '100%',
+    borderWidth: 0.1,
+  },
+  textStyle: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    padding: 7,
+  },
+});
